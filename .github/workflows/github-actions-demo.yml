@@ -1,28 +1,51 @@
-name: build
-on:
-  push:
-    branches:
-      - master
-  pull_request:
+
+
+name: GitHub Actions Demo
+on: [push]
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-18.04
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: 'actions/checkout@v2'
+
+      # Setup gcloud CLI
+      - uses: 'google-github-actions/auth@main'
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+
+      # Configure Docker with Credentials
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker
+
+      # Build the Docker image
+      - name: Build & Publish
+        run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT }}
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
+          gcloud config set run/region us-central1
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy
+        run: |
+          gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} \
+          --platform managed \
+          --allow-unauthenticated \
+          --memory 512M \
+          --port 5000
 
       - name: Build an image from Dockerfile
-        run: |
-          docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
+          run: |
+            docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
-
+            - name: Run Trivy vulnerability scanner
+              uses: aquasecurity/trivy-action@master
+              with:
+                image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+                format: 'table'
+                exit-code: '1'
+                ignore-unfixed: true
+                vuln-type: 'os,library'
+                severity: 'CRITICAL,HIGH'
