@@ -35,7 +35,7 @@ jobs:
           --allow-unauthenticated \
           --memory 512M \
           --port 5000
-
+      # Add trivy
       - name: Build an image from Dockerfile
         run: |
             docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
