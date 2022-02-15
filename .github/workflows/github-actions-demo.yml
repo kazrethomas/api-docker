@@ -37,7 +37,7 @@ jobs:
           --port 5000
 
       - name: Build an image from Dockerfile
-          run: |
+        run: |
             docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
 
             - name: Run Trivy vulnerability scanner
@@ -49,3 +49,4 @@ jobs:
                 ignore-unfixed: true
                 vuln-type: 'os,library'
                 severity: 'CRITICAL,HIGH'
+
