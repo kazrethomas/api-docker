@@ -35,7 +35,6 @@ jobs:
           --allow-unauthenticated \
           --memory 512M \
           --port 5000
-          --region us-central1
       # Add trivy
       - name: Build an image from Dockerfile
         run: |
