@@ -27,18 +27,10 @@ jobs:
           gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
           gcloud config set run/region us-central1
 
-      # Deploy the Docker image to the GKE cluster
-      - name: Deploy
-        run: |
-          gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} \
-          --platform managed \
-          --allow-unauthenticated \
-          --memory 512M \
-          --port 5000
       # Add trivy
       - name: Build an image from Dockerfile
         run: |
-            docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
+          docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -49,4 +41,13 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy
+        run: |
+          gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} \
+          --platform managed \
+          --allow-unauthenticated \
+          --memory 512M \
+          --port 5000
 
