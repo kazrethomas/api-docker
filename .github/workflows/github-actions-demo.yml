@@ -45,7 +45,7 @@ jobs:
 
 
       # sss
-      - name: set up JDK 1.8
+      - name: set up Python 3
         uses: actions/setup-python@v1
         with:
           python-version: 3.6
