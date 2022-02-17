@@ -42,6 +42,33 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
+
+
+
+
+
+
+
+
+
+
+
+
+      # Execute unit tests
+        - name: Unit Test
+          run: ./gradlew testDebugUnitTest
+
+         - name: Android Test Report
+          uses: asadmansr/android-test-report-action@v1.2.0
+          if: ${{ always() }} # IMPORTANT: run Android Test Report regardless
+
+
+
+
+
+
+
+
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |
