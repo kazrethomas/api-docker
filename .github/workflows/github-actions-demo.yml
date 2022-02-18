@@ -9,6 +9,21 @@ jobs:
       - name: Checkout
         uses: 'actions/checkout@v2'
 
+
+    # Add unit testing
+     - uses: actions/checkout@v2
+     - name: Set up Python 3.6
+       uses: actions/setup-python@v1
+       with:
+          python-version: 3.6
+     - name: Install dependencies
+       run: |
+         python -m pip install --upgrade pip
+         pip install -r requirements.txt
+      #     - name: Test with pytest
+      #          run: pytest -vv
+
+
       # Setup gcloud CLI
       - uses: 'google-github-actions/auth@main'
         with:
@@ -41,19 +56,6 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.6
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.6
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
- #     - name: Test with pytest
- #          run: pytest -vv
-
 
 
       # Deploy the Docker image to the GKE cluster
