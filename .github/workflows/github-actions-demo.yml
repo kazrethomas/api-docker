@@ -13,7 +13,7 @@ jobs:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
       # Setup Python Unit testing code coverage
-      -
+
       - name: Set up Python 3.6
         uses: actions/setup-python@v2
         with:
