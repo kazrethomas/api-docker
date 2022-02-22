@@ -8,16 +8,12 @@ jobs:
     steps:
       - name: Checkout
         uses: 'actions/checkout@v2'
-
-
-    # Add unit testing
-
-     - name: Set up Python 3.6
-       uses: actions/setup-python@v1
-       with:
+      - name: Set-up-Python-36
+        uses: actions/setup-python@v1
+        with:
           python-version: 3.6
-     - name: Install dependencies
-       run: |
+      - name: Install dependencies
+        run: |
          python -m pip install --upgrade pip
          pip install -r requirements.txt
       #     - name: Test with pytest
